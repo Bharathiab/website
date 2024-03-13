@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        li button {
+            margin-left: 8px;
+            cursor: pointer;
+        }
+    </style>
+    <title>To-Do App</title>
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do App</h1>
+        <div>
+            <label for="taskInput">Add Task:</label>
+            <input type="text" id="taskInput" placeholder="Enter your task">
+            <button onclick="addTask()">Add</button>
+        </div>
+        <div>
+            <h2>Pending Tasks</h2>
+            <ul id="pendingTasks"></ul>
+        </div>
+        <div>
+            <h2>Completed Tasks</h2>
+            <ul id="completedTasks"></ul>
+        </div>
+    </div>
+    <script>
+        let tasks = [];
+
+        function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const taskText = taskInput.value.trim();
+
+            if (taskText !== '') {
+                const task = {
+                    text: taskText,
+                    date: new Date(),
+                    completed: false
+                };
+
+                tasks.push(task);
+                displayTasks();
+                taskInput.value = '';
+            }
+        }
+
+        function completeTask(index) {
+            tasks[index].completed = true;
+            tasks[index].completionDate = new Date();
+            displayTasks();
+        }
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            displayTasks();
+        }
+
+        function displayTasks() {
+            const pendingTasksList = document.getElementById('pendingTasks');
+            const completedTasksList = document.getElementById('completedTasks');
+
+            pendingTasksList.innerHTML = '';
+            completedTasksList.innerHTML = '';
+
+            tasks.forEach((task, index) => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <span>${task.text}</span>
+                    <span>${task.completed ? 'Completed on ' + task.completionDate.toLocaleString() : 'Added on ' + task.date.toLocaleString()}</span>
+                    <button onclick="completeTask(${index})" ${task.completed ? 'disabled' : ''}>Complete</button>
+                    <button onclick="deleteTask(${index})">Delete</button>
+                `;
+
+                if (task.completed) {
+                    completedTasksList.appendChild(listItem);
+                } else {
+                    pendingTasksList.appendChild(listItem);
+                }
+            });
+        }
+
+        displayTasks();
+    </script>
+</body>
+</html>
